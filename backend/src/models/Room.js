@@ -22,7 +22,7 @@ const roomSchema = new mongoose.Schema({
     type: String,
   },
   image: {
-    type: String, // URL or file path
+    type: String, // image file name (e.g., "room1.jpg")
   },
 });
 
