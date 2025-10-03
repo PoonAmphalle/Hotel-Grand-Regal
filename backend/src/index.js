@@ -9,9 +9,13 @@ app.use(cors());
 
 // Import room routes
 const roomRoutes = require("./routes/roomRoutes");
+// Import menu routes 👇
+const menuRoutes = require("./routes/menuRoutes");
 
 // Use routes
 app.use("/api/rooms", roomRoutes);
+// Use menu routes 👇
+app.use("/api/menu", menuRoutes);
 
 const PORT = process.env.PORT || 5000;
 

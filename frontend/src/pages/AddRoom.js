@@ -2,48 +2,97 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function AddRoom() {
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: "",
     pricePerNight: "",
-    amenities: "",
     capacity: "",
+    amenities: "",
     description: "",
     image: ""
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const roomData = {
-        ...formData,
-        pricePerNight: Number(formData.pricePerNight),
-        capacity: Number(formData.capacity),
-        amenities: formData.amenities.split(",") // convert CSV to array
-      };
-
+      // Convert amenities string into array
+      const roomData = { ...form, amenities: form.amenities.split(",") };
       await axios.post("http://localhost:5000/api/rooms", roomData);
       alert("Room added successfully!");
+      setForm({
+        name: "",
+        pricePerNight: "",
+        capacity: "",
+        amenities: "",
+        description: "",
+        image: ""
+      });
     } catch (err) {
       console.error(err);
-      alert("Error adding room");
+      alert("Failed to add room.");
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Add New Room</h2>
+    <div className="container mt-4">
+      <h2>Add Room</h2>
       <form onSubmit={handleSubmit}>
-        <input type="text" name="name" placeholder="Room Name" onChange={handleChange} required /><br />
-        <input type="number" name="pricePerNight" placeholder="Price Per Night" onChange={handleChange} required /><br />
-        <input type="text" name="amenities" placeholder="Amenities (comma separated)" onChange={handleChange} /><br />
-        <input type="number" name="capacity" placeholder="Capacity" onChange={handleChange} required /><br />
-        <input type="text" name="description" placeholder="Description" onChange={handleChange} /><br />
-        <input type="text" name="image" placeholder="Image URL" onChange={handleChange} /><br />
-        <button type="submit">Add Room</button>
+        <input
+          className="form-control mb-2"
+          type="text"
+          name="name"
+          placeholder="Room Name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-control mb-2"
+          type="number"
+          name="pricePerNight"
+          placeholder="Price per Night"
+          value={form.pricePerNight}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-control mb-2"
+          type="number"
+          name="capacity"
+          placeholder="Capacity"
+          value={form.capacity}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="form-control mb-2"
+          type="text"
+          name="amenities"
+          placeholder="Amenities (comma separated)"
+          value={form.amenities}
+          onChange={handleChange}
+        />
+        <textarea
+          className="form-control mb-2"
+          name="description"
+          placeholder="Description"
+          value={form.description}
+          onChange={handleChange}
+        />
+        <input
+          className="form-control mb-2"
+          type="text"
+          name="image"
+          placeholder="Image Path (e.g. /images/room1.jpg)"
+          value={form.image}
+          onChange={handleChange}
+        />
+        <button className="btn btn-primary" type="submit">
+          Add Room
+        </button>
       </form>
     </div>
   );
