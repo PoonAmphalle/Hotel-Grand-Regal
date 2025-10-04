@@ -56,14 +56,20 @@ function AddMenu() {
           onChange={handleChange}
           required
         />
-        <input
+
+        {/* 🔽 Category Dropdown instead of text input */}
+        <select
           className="form-control mb-2"
-          type="text"
           name="category"
-          placeholder="Category"
           value={form.category}
           onChange={handleChange}
-        />
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="Veg">Veg</option>
+          <option value="Non-Veg">Non-Veg</option>
+        </select>
+
         <input
           className="form-control mb-2"
           type="text"
@@ -72,7 +78,10 @@ function AddMenu() {
           value={form.image}
           onChange={handleChange}
         />
-        <button className="btn btn-primary" type="submit">Add Item</button>
+
+        <button className="btn btn-primary" type="submit">
+          Add Item
+        </button>
       </form>
     </div>
   );
