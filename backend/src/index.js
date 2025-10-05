@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ Health check route
+// Health check route
 app.get("/", (req, res) => {
   res.send("Hotel Grand Regal API is running");
 });
@@ -15,19 +15,24 @@ app.get("/", (req, res) => {
 // Import routes
 const roomRoutes = require("./routes/roomRoutes");
 const menuRoutes = require("./routes/menuRoutes");
-const authRoutes = require("./routes/authRoutes"); // <-- Auth routes
+const authRoutes = require("./routes/authRoutes");
 
 // Use routes
 app.use("/api/rooms", roomRoutes);
 app.use("/api/menu", menuRoutes);
-app.use("/api/auth", authRoutes); // <-- Added auth routes
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("✅ MongoDB connected");
     app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
   })
-  .catch((error) => console.error("❌ MongoDB connection failed:", error));
+  .catch((error) => console.error("❌ MongoDB connection failed:", error.message));
+
+  

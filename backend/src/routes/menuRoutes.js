@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createMenuItem,
+  addMenuItem,       // <-- changed from createMenuItem
   getMenuItems,
   updateMenuItem,
   deleteMenuItem,
@@ -13,7 +13,7 @@ const { protect, admin } = require("../middleware/authMiddleware");
 router.get("/", protect, getMenuItems);
 
 // Admin-only routes
-router.post("/", protect, admin, createMenuItem);
+router.post("/", protect, admin, addMenuItem);  // <-- changed here too
 router.put("/:id", protect, admin, updateMenuItem);
 router.delete("/:id", protect, admin, deleteMenuItem);
 
