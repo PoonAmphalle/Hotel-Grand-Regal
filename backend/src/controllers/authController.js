@@ -1,11 +1,10 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "30d" });
-};
+const generateToken = (id, role) =>
+  jwt.sign({ id, role }, process.env.JWT_SECRET || "dev_secret", { expiresIn: "30d" });
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
     const userExists = await User.findOne({ email });
@@ -24,7 +23,7 @@ const registerUser = async (req, res) => {
   }
 };
 
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -45,4 +44,23 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
+};
+
+export const seedAdminIfNeeded = async () => {
+  const adminEmail = "admin@grandregal.com";
+  const exists = await User.findOne({ email: adminEmail });
+  if (exists) return;
+  await User.create({
+    name: "Default Admin",
+    email: adminEmail,
+    password: "Admin@123",
+    role: "admin",
+  });
+};

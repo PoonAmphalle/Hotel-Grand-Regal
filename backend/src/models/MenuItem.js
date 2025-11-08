@@ -1,15 +1,19 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const menuItemSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: String,
-  price: { type: Number, required: true },
-  category: { 
-    type: String, 
-    enum: ["Veg", "Non-Veg"], 
-    required: true 
+const menuItemSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true },
+    description: String,
+    price: { type: Number, required: true },
+    category: {
+      type: String,
+      enum: ["Veg", "Non-Veg"],
+      required: true,
+    },
+    image: String,
   },
-  image: String
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('MenuItem', menuItemSchema);
+const MenuItem = mongoose.model('MenuItem', menuItemSchema);
+export default MenuItem;

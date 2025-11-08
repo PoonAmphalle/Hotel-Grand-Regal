@@ -1,24 +1,29 @@
+import React from "react";
 import { Navigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // ✅ Correct import
 
-const ProtectedRoute = ({ children, role }) => {
+const ProtectedRoute = ({ children, requiredRole }) => {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    return <Navigate to="/login" />;
+    // No token → redirect to login
+    return <Navigate to="/login" replace />;
   }
 
   try {
-    const decoded = jwt_decode(token);
+    const decoded = jwtDecode(token);
 
-    if (role && decoded.role !== role) {
-      // User role does not match required role
-      return <Navigate to="/" />;
+    // Optional: if route requires a specific role (e.g., admin)
+    if (requiredRole && decoded.role !== requiredRole) {
+      return <Navigate to="/" replace />;
     }
 
+    // Token valid → allow access
     return children;
   } catch (error) {
-    return <Navigate to="/login" />;
+    console.error("Invalid token:", error);
+    localStorage.removeItem("token");
+    return <Navigate to="/login" replace />;
   }
 };
 

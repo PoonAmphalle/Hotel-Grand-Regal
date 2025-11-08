@@ -1,11 +1,14 @@
 {
   "name": "hotel-grand-regal-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend for Hotel Grand Regal website",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seed": "node src/seed.js",
+    "seed:reset": "node src/seed.js --reset"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

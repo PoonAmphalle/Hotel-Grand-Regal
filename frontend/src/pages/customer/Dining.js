@@ -8,14 +8,52 @@ function Dining() {
   const [category, setCategory] = useState("");
   const [search, setSearch] = useState("");
 
+  // normalize any backend/public shape into a displayable image URL
+  const toImageUrl = (item) => {
+    const val =
+      item?.image ??
+      item?.imageUrl ??
+      item?.photo ??
+      item?.url ??
+      item?.path ??
+      null;
+
+    const fromString = (s) => {
+      if (!s) return null;
+      // Absolute URLs or data URIs
+      if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("data:")) return s;
+      // Public asset path (served by React from /public) — keep as-is
+      if (s.startsWith("/")) return s;
+      // Backend relative path (e.g., uploads/...) — prefix API origin
+      return `http://localhost:5000/${s}`;
+    };
+
+    if (typeof val === "string") return fromString(val);
+    if (val && typeof val === "object") {
+      // Support shapes like { url, path } or { data, contentType }
+      if (typeof val.url === "string") return fromString(val.url);
+      if (typeof val.path === "string") return fromString(val.path);
+      if (val.data && (val.contentType || val.mimeType)) {
+        const type = val.contentType || val.mimeType || "image/jpeg";
+        return `data:${type};base64,${val.data}`;
+      }
+    }
+    // final fallback placeholder
+    return "https://via.placeholder.com/600x400?text=Dish";
+  };
+
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/menu")
       .then((res) => {
-        setMenu(res.data);
-        setFilteredMenu(res.data);
+        const withImg = (res.data || []).map((d) => ({
+          ...d,
+          _imageSrc: toImageUrl(d),
+        }));
+        setMenu(withImg);
+        setFilteredMenu(withImg);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error fetching menu:", err));
   }, []);
 
   // filter logic
@@ -32,7 +70,9 @@ function Dining() {
 
     if (search) {
       filtered = filtered.filter((item) =>
-        item.name.toLowerCase().includes(search.toLowerCase())
+        String(item.name || "")
+          .toLowerCase()
+          .includes(search.toLowerCase())
       );
     }
 
@@ -76,13 +116,16 @@ function Dining() {
       <Row>
         {filteredMenu.length > 0 ? (
           filteredMenu.map((dish) => (
-            <Col md={4} key={dish._id} className="mb-4">
+            <Col md={4} key={dish._id || dish.id || dish.name} className="mb-4">
               <Card className="h-100 shadow-sm">
                 <Card.Img
                   variant="top"
-                  src={dish.image}
-                  alt={dish.name}
+                  src={dish._imageSrc}
+                  alt={dish.name || "Dish image"}
                   style={{ height: "200px", objectFit: "cover" }}
+                  onError={(e) => {
+                    e.currentTarget.src = "https://via.placeholder.com/600x400?text=Dish";
+                  }}
                 />
                 <Card.Body>
                   <Card.Title>{dish.name}</Card.Title>

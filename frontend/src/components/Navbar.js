@@ -1,53 +1,36 @@
-import { Link, useNavigate } from "react-router-dom";
-import jwt_decode from "jwt-decode";
+import React from "react";
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
-  const navigate = useNavigate();
+function Navbar() {
   const token = localStorage.getItem("token");
-  let role = null;
-
-  if (token) {
-    try {
-      const decoded = jwt_decode(token);
-      role = decoded.role;
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    window.location.href = "/";
   };
 
   return (
-    <nav style={{ padding: "10px", borderBottom: "1px solid #ccc" }}>
-      <Link to="/">Hotel Grand Regal</Link>{" | "}
-
-      {role === "admin" && (
-        <>
-          <Link to="/admin/dashboard">Dashboard</Link>{" | "}
-          <Link to="/admin/rooms">Manage Rooms</Link>{" | "}
-          <Link to="/admin/menu">Manage Menu</Link>{" | "}
-        </>
-      )}
-
-      {role === "customer" && (
-        <>
-          <Link to="/customer/home">Home</Link>{" | "}
-          <Link to="/customer/menu">Menu</Link>{" | "}
-        </>
-      )}
-
-      {token && <button onClick={handleLogout}>Logout</button>}
-      {!token && (
-        <>
-          <Link to="/login">Login</Link>{" | "}
-          <Link to="/register">Register</Link>
-        </>
-      )}
+    <nav className="navbar">
+      <div className="navbar-container">
+        <h2 className="navbar-brand">Hotel Grand Regal</h2>
+        <ul className="nav-links">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/rooms">Rooms</Link></li>
+          <li><Link to="/dining">Dining</Link></li>
+          <li><Link to="/banquet">Banquet Hall</Link></li>
+          <li><Link to="/about">About Us</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
+          {token ? (
+            <li><button onClick={handleLogout} style={{ background:"transparent", border:"none", color:"white", cursor:"pointer" }}>Logout</button></li>
+          ) : (
+            <li><Link to="/login">Login</Link></li>
+          )}
+        </ul>
+      </div>
     </nav>
   );
-};
+}
 
 export default Navbar;
+
+

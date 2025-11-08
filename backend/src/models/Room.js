@@ -1,29 +1,13 @@
-// backend/src/models/Room.js
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const roomSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  pricePerNight: {
-    type: Number,
-    required: true,
-  },
-  amenities: {
-    type: [String], // array of strings
-    default: [],
-  },
-  capacity: {
-    type: Number,
-    required: true,
-  },
-  description: {
-    type: String,
-  },
-  image: {
-    type: String, // image file name (e.g., "room1.jpg")
-  },
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  price: { type: Number, required: true },
+  available: { type: Boolean, default: true },
+  image: { type: String } // Optional image URL
 });
 
-module.exports = mongoose.model("Room", roomSchema);
+const Room = mongoose.model("Room", roomSchema);
+
+export default Room;

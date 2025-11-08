@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 
@@ -9,70 +9,64 @@ import ManageMenu from "./pages/admin/ManageMenu";
 
 // Customer pages
 import Home from "./pages/customer/Home";
-import Menu from "./pages/customer/Menu";
+import Rooms from "./pages/customer/Rooms";
+import Dining from "./pages/customer/Dining";
+
+// Common pages
+import About from "./pages/common/About";
+import Banquet from "./pages/common/Banquet";
+import Contact from "./pages/common/Contact";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
-
+import Footer from "./components/Footer";
 import "./App.css";
+
+import RoomDetails from "./pages/RoomDetails";
+import NotFound from "./pages/common/NotFound";
 
 function App() {
   return (
-    <Router>
+    <div className="app-shell">
       <Navbar />
+      <main className="main-content">
       <Routes>
-        {/* Auth routes */}
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Admin routes */}
+        {/* Admin */}
         <Route
           path="/admin/dashboard"
-          element={
-            <ProtectedRoute role="admin">
-              <Dashboard />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><Dashboard /></ProtectedRoute>}
         />
         <Route
           path="/admin/rooms"
-          element={
-            <ProtectedRoute role="admin">
-              <ManageRooms />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><ManageRooms /></ProtectedRoute>}
         />
         <Route
           path="/admin/menu"
-          element={
-            <ProtectedRoute role="admin">
-              <ManageMenu />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute><ManageMenu /></ProtectedRoute>}
         />
 
-        {/* Customer routes */}
-        <Route
-          path="/customer/home"
-          element={
-            <ProtectedRoute role="customer">
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/customer/menu"
-          element={
-            <ProtectedRoute role="customer">
-              <Menu />
-            </ProtectedRoute>
-          }
-        />
+        {/* Customer */}
+        <Route path="/" element={<Home />} />
+        <Route path="/rooms" element={<Rooms />} />
+        <Route path="/dining" element={<Dining />} />
 
-        {/* Default route */}
-        <Route path="*" element={<Login />} />
+        {/* Common */}
+        <Route path="/about" element={<About />} />
+        <Route path="/banquet" element={<Banquet />} />
+        <Route path="/contact" element={<Contact />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<NotFound />} />
+        <Route path="/rooms/:id" element={<RoomDetails />} />
+
       </Routes>
-    </Router>
+      </main>
+      <Footer />
+    </div>
   );
 }
 

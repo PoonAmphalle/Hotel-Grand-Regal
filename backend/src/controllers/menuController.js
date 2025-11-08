@@ -1,7 +1,7 @@
-const MenuItem = require("../models/MenuItem");
+import MenuItem from "../models/MenuItem.js";
 
 // Get all menu items
-const getMenuItems = async (req, res) => {
+export const getMenuItems = async (req, res) => {
   try {
     const items = await MenuItem.find();
     res.json(items);
@@ -11,7 +11,7 @@ const getMenuItems = async (req, res) => {
 };
 
 // Add a menu item
-const addMenuItem = async (req, res) => {
+export const addMenuItem = async (req, res) => {
   try {
     const item = new MenuItem(req.body);
     await item.save();
@@ -22,7 +22,7 @@ const addMenuItem = async (req, res) => {
 };
 
 // Update a menu item
-const updateMenuItem = async (req, res) => {
+export const updateMenuItem = async (req, res) => {
   try {
     const item = await MenuItem.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!item) return res.status(404).json({ message: "Menu item not found" });
@@ -33,7 +33,7 @@ const updateMenuItem = async (req, res) => {
 };
 
 // Delete a menu item
-const deleteMenuItem = async (req, res) => {
+export const deleteMenuItem = async (req, res) => {
   try {
     const item = await MenuItem.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ message: "Menu item not found" });
@@ -42,5 +42,3 @@ const deleteMenuItem = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-module.exports = { getMenuItems, addMenuItem, updateMenuItem, deleteMenuItem };
