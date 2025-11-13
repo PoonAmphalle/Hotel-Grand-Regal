@@ -17,7 +17,7 @@ function AddMenu() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/menu", form);
+      await axios.post("/api/menu", form);
       alert("Menu item added successfully!");
       setForm({ name: "", description: "", price: "", category: "", image: "" });
     } catch (err) {

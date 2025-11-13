@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { getRooms } from "../../services/api";
 
 const Rooms = () => {
   const [rooms, setRooms] = useState([]);
@@ -10,7 +10,7 @@ const Rooms = () => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/rooms");
+        const res = await getRooms();
 
         const inferType = (text) => {
           const t = String(text || "").toLowerCase();
@@ -99,44 +99,103 @@ const Rooms = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="room-page">
-      <h2 className="room-heading">Our Rooms</h2>
+    <div className="container my-5">
+      <h2 className="text-center mb-5">Our Luxurious Rooms</h2>
+      
+      <div className="row mb-5">
+        <div className="col-md-6 mb-3">
+          <label className="form-label fw-semibold">Filter by Room Type:</label>
+          <select 
+            className="form-select form-select-lg" 
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            style={{ borderColor: '#005f99' }}
+          >
+            {types.map((type) => (
+              <option key={type} value={type}>
+                {type === 'all' ? 'All Room Types' : type}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-md-6 mb-3">
+          <label className="form-label fw-semibold">Filter by Price Range (₹):</label>
+          <select 
+            className="form-select form-select-lg" 
+            value={priceRange}
+            onChange={(e) => setPriceRange(e.target.value)}
+            style={{ borderColor: '#005f99' }}
+          >
+            <option value="all">All Price Ranges</option>
+            <option value="0-2000">Under ₹2000</option>
+            <option value="2000-5000">₹2000 - ₹5000</option>
+            <option value="5000-10000">₹5000 - ₹10000</option>
+            <option value=">10000">Over ₹10000</option>
+          </select>
+        </div>
+      </div>
 
-      <div className="room-filters">
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-          {types.map((t) => (
-            <option key={t} value={t}>
-              {t === "all" ? "All Types" : t}
-            </option>
+      {filteredRooms.length > 0 ? (
+        <div className="row g-4">
+          {filteredRooms.map((room) => (
+            <div key={room._id} className="col-12 col-md-6 col-lg-4 d-flex">
+              <div className="room-card h-100 w-100">
+                <Link to={`/rooms/${room._id}`} className="room-card-link text-decoration-none">
+                  <div className="card-img-container overflow-hidden" style={{ height: '200px' }}>
+                    <img 
+                      src={room.image || '/images/room-placeholder.jpg'}
+                      alt={room.name}
+                      className="card-img w-100 h-100 object-cover"
+                      onError={(e) => {
+                        e.target.src = 'https://via.placeholder.com/400x300?text=Room+Image';
+                      }}
+                    />
+                  </div>
+                  <div className="card-body">
+                    <h3 className="card-title h5 fw-bold text-dark">{room.name}</h3>
+                    <p className="card-text text-muted">
+                      {room.description?.length > 150 
+                        ? `${room.description.substring(0, 150)}...` 
+                        : room.description || 'Experience luxury and comfort with our premium room amenities.'}
+                    </p>
+                    <div className="d-flex gap-3 mb-3">
+                      <div className="d-flex align-items-center text-muted">
+                        <i className="fas fa-ruler-combined me-2"></i>
+                        <span>{room.size || '30'} m²</span>
+                      </div>
+                      <div className="d-flex align-items-center text-muted">
+                        <i className="fas fa-user-friends me-2"></i>
+                        <span>Max {room.capacity || 2}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center pt-0">
+                    <span className="badge bg-light text-dark">
+                      <i className="fas fa-hotel me-1"></i> {room.type || 'Standard'}
+                    </span>
+                    <span className="text-primary fw-bold">
+                      ₹{room.price?.toLocaleString() || 'N/A'} <small className="text-muted">/night</small>
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </div>
           ))}
-        </select>
-        <select value={priceRange} onChange={(e) => setPriceRange(e.target.value)}>
-          <option value="all">All Prices</option>
-          <option value="0-2000">₹0 - ₹2,000</option>
-          <option value="2000-5000">₹2,000 - ₹5,000</option>
-          <option value="5000-10000">₹5,000 - ₹10,000</option>
-          <option value=">10000">Above ₹10,000</option>
-        </select>
-      </div>
-
-      <div className="room-container">
-        {filteredRooms.length > 0 ? (
-          filteredRooms.map((room) => (
-            <button
-              className="room-card"
-              key={room._id}
-              onClick={() => navigate(`/rooms/${room._id}`)}
-            >
-              <img src={room.image} alt={room.name} />
-              <h3>{room.name}</h3>
-              {room.description && <p>{room.description}</p>}
-              <p className="room-price">Price: ₹{room.price} / night</p>
-            </button>
-          ))
-        ) : (
-          <p>No rooms found.</p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="w-100 text-center py-5">
+          <h4 className="mb-4">No rooms found matching your criteria</h4>
+          <button 
+            className="btn btn-outline-primary px-4 py-2"
+            onClick={() => {
+              setTypeFilter('all');
+              setPriceRange('all');
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
     </div>
   );
 };

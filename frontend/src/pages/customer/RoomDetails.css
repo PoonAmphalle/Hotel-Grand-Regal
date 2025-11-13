@@ -1,0 +1,114 @@
+/* RoomDetails.css */
+.room-image-container {
+  width: 100%;
+  background: transparent;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.room-image-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.room-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.room-image:hover {
+  transform: scale(1.01);
+}
+
+.room-description {
+  max-width: 900px;
+  margin: 2rem auto;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  color: #444;
+  padding: 0 1rem;
+}
+
+/* Room details container */
+.room-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem;
+}
+
+/* Room features section */
+.room-features-section {
+  margin: 3rem 0;
+  padding: 2rem 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .room-image {
+    max-height: 60vh;
+  }
+  
+  .room-description {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}
+
+/* Back button */
+.btn-back {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+}
+
+.btn-back:hover {
+  background-color: #f8f9fa;
+  transform: translateX(-3px);
+}
+
+/* Room amenities */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.amenity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.amenity-item:hover {
+  background-color: #f8f9fa;
+}
+
+.amenity-icon {
+  color: #0056b3;
+  font-size: 1.2rem;
+  width: 24px;
+  text-align: center;
+}

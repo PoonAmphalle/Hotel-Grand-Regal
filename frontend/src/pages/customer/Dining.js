@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Container, Row, Col, Card, Form } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { getDining } from "../../services/api";
+import "./Dining.css";
 
 function Dining() {
+  const navigate = useNavigate();
   const [menu, setMenu] = useState([]);
   const [filteredMenu, setFilteredMenu] = useState([]);
   const [category, setCategory] = useState("");
@@ -24,8 +27,8 @@ function Dining() {
       if (s.startsWith("http://") || s.startsWith("https://") || s.startsWith("data:")) return s;
       // Public asset path (served by React from /public) — keep as-is
       if (s.startsWith("/")) return s;
-      // Backend relative path (e.g., uploads/...) — prefix API origin
-      return `http://localhost:5000/${s}`;
+      // Backend relative path (e.g., uploads/...) — use relative path
+      return `/${s}`;
     };
 
     if (typeof val === "string") return fromString(val);
@@ -43,15 +46,12 @@ function Dining() {
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/menu")
-      .then((res) => {
-        const withImg = (res.data || []).map((d) => ({
-          ...d,
-          _imageSrc: toImageUrl(d),
-        }));
-        setMenu(withImg);
-        setFilteredMenu(withImg);
+    getDining()
+      .then((response) => {
+        const data = response.data || [];
+        console.log("Fetched menu items:", data);
+        setMenu(data);
+        setFilteredMenu(data);
       })
       .catch((err) => console.error("Error fetching menu:", err));
   }, []);
@@ -80,69 +80,87 @@ function Dining() {
   }, [category, search, menu]);
 
   return (
-    <Container className="my-4">
-      <h2 className="text-center mb-4">Dining Menu</h2>
+    <div className="container my-5">
+      <h2 className="text-center mb-5">Our Exquisite Dining Experience</h2>
+      
+      <div className="row mb-5">
+        <div className="col-md-6 mb-3">
+          <label className="form-label fw-semibold">Filter by Category:</label>
+          <select 
+            className="form-select form-select-lg" 
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={{ borderColor: '#005f99' }}
+          >
+            <option value="">All Categories</option>
+            <option value="Veg">Vegetarian</option>
+            <option value="Non-Veg">Non-Vegetarian</option>
+            <option value="Appetizer">Appetizers</option>
+            <option value="Main Course">Main Course</option>
+            <option value="Dessert">Desserts</option>
+            <option value="Beverage">Beverages</option>
+          </select>
+        </div>
+        
+        <div className="col-md-6 mb-3">
+          <label className="form-label fw-semibold">Search Menu:</label>
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            placeholder="Search for dishes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ borderColor: '#005f99' }}
+          />
+        </div>
+      </div>
 
-      {/* Filters */}
-      <Row className="mb-4">
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Filter by Category</Form.Label>
-            <Form.Select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option value="">All</option>
-              <option value="Veg">Veg</option>
-              <option value="Non-Veg">Non-Veg</option>
-            </Form.Select>
-          </Form.Group>
-        </Col>
-
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label>Search Dish</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter dish name"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </Form.Group>
-        </Col>
-      </Row>
-
-      {/* Menu Cards */}
-      <Row>
-        {filteredMenu.length > 0 ? (
-          filteredMenu.map((dish) => (
-            <Col md={4} key={dish._id || dish.id || dish.name} className="mb-4">
-              <Card className="h-100 shadow-sm">
-                <Card.Img
-                  variant="top"
-                  src={dish._imageSrc}
-                  alt={dish.name || "Dish image"}
-                  style={{ height: "200px", objectFit: "cover" }}
-                  onError={(e) => {
-                    e.currentTarget.src = "https://via.placeholder.com/600x400?text=Dish";
-                  }}
-                />
-                <Card.Body>
-                  <Card.Title>{dish.name}</Card.Title>
-                  <Card.Text>
-                    <strong>Price:</strong> ₹{dish.price} <br />
-                    <strong>Category:</strong> {dish.category || "N/A"} <br />
-                    {dish.description}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))
-        ) : (
-          <p className="text-center">No dishes found.</p>
-        )}
-      </Row>
-    </Container>
+      {filteredMenu.length > 0 ? (
+        <div className="dining-container">
+          <div className="dining-grid">
+            {filteredMenu.map((dish) => (
+              <div 
+                key={dish._id} 
+                className="dining-card"
+                onClick={() => navigate(`/dining/${dish._id}`)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="dining-card-img-container">
+                  <img 
+                    src={dish._imageSrc} 
+                    alt={dish.name}
+                    className="dining-image"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/600x400?text=Dish+Image';
+                    }}
+                  />
+                </div>
+                <div className="dining-content">
+                  <h3>{dish.name}</h3>
+                  <p>{dish.description || 'Delicious dish prepared with care and fresh ingredients.'}</p>
+                  <div className="d-flex justify-content-end align-items-center mt-auto">
+                    <span className="fw-bold text-primary">₹{dish.price?.toLocaleString() || 'N/A'}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="text-center py-5">
+          <h4>No dishes found matching your criteria</h4>
+          <button 
+            className="btn btn-outline-primary mt-3"
+            onClick={() => {
+              setCategory('');
+              setSearch('');
+            }}
+          >
+            Clear Filters
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 

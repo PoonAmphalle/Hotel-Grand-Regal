@@ -1,0 +1,250 @@
+/* DishDetail.css */
+.dish-detail-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.dish-content-wrapper {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Image Section */
+.dish-image-section {
+  flex: 0 0 45%;
+  max-width: 45%;
+}
+
+.dish-image-wrapper {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.dish-image {
+  max-width: 100%;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Details Section */
+.dish-details-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.dish-header {
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dish-header h1 {
+  color: #2d3748;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.dish-category {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(79, 172, 254, 0.1);
+  color: #2b6cb0;
+  border: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+.dish-description {
+  color: #4a5568;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0 0 2rem 0;
+  flex-grow: 1;
+}
+
+.dish-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.price-tag {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2d3748;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+}
+
+.price-tag::before {
+  content: '₹';
+  font-size: 1.4rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+/* Back Button */
+.btn-back {
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.2s ease;
+  margin-bottom: 1rem;
+}
+
+.btn-back:hover {
+  color: #2d3748;
+}
+
+.btn-back i {
+  font-size: 0.9rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .dish-detail-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .dish-info {
+    padding: 2rem 0 0 0;
+  }
+  
+  .dish-info::before {
+    display: none;
+  }
+  
+  .dish-info h1 {
+    font-size: 2rem;
+    margin-top: 1.5rem;
+  }
+  
+  .dish-image {
+    max-height: 400px;
+  }
+}
+
+/* Add to cart button */
+.btn-add-to-cart {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: #e53e3e;
+  border: none;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(229, 62, 62, 0.3);
+}
+
+.btn-add-to-cart:hover {
+  background: #c53030;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(229, 62, 62, 0.4);
+}
+
+.btn-add-to-cart i {
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .dish-content-wrapper {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .dish-image-section,
+  .dish-details-section {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+  
+  .dish-image {
+    max-height: 350px;
+  }
+  
+  .dish-header h1 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dish-detail-container {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .dish-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .dish-description {
+    font-size: 1rem;
+  }
+  
+  .price-tag {
+    font-size: 1.6rem;
+  }
+  
+  .btn-add-to-cart {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}

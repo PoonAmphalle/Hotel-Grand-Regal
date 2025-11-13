@@ -20,7 +20,7 @@ function AddRoom() {
     try {
       // Convert amenities string into array
       const roomData = { ...form, amenities: form.amenities.split(",") };
-      await axios.post("http://localhost:5000/api/rooms", roomData);
+      await axios.post("/api/rooms", roomData);
       alert("Room added successfully!");
       setForm({
         name: "",

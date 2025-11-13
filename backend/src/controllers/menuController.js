@@ -1,5 +1,18 @@
 import MenuItem from "../models/MenuItem.js";
 
+// Get a single menu item by ID
+export const getMenuItemById = async (req, res) => {
+  try {
+    const item = await MenuItem.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: 'Menu item not found' });
+    }
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching menu item', error: err.message });
+  }
+};
+
 // Get all menu items
 export const getMenuItems = async (req, res) => {
   try {

@@ -1,0 +1,97 @@
+/* Dining.css */
+
+/* Force override Bootstrap styles */
+.dining-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 20px !important;
+  justify-content: center !important;
+  padding: 20px 0 !important;
+  margin: 0 auto !important;
+  max-width: 1400px !important;
+}
+
+.dining-card {
+  width: 280px !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  background: #fff !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+.dining-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+}
+
+.dining-image {
+  width: 100% !important;
+  height: 200px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.dining-content {
+  padding: 15px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.dining-content h3 {
+  color: #2c3e50 !important;
+  margin-bottom: 8px !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+}
+
+.dining-content p {
+  color: #666 !important;
+  flex-grow: 1 !important;
+  margin-bottom: 15px !important;
+  font-size: 0.95rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dining-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 15px !important;
+    padding: 15px !important;
+  }
+  
+  .dining-card {
+    width: 100% !important;
+    max-width: 350px !important;
+  }
+}
+
+/* Override Bootstrap card styles */
+.card {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure images maintain aspect ratio */
+.dining-card-img-container {
+  width: 100% !important;
+  height: 200px !important;
+  overflow: hidden !important;
+}
+
+.dining-card-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.3s ease !important;
+}
+
+.dining-card:hover .dining-card-img {
+  transform: scale(1.05) !important;
+}
